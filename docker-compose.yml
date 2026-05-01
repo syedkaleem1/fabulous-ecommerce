@@ -1,0 +1,174 @@
+#version: '3.9'
+#
+## ─────────────────────────────────────────────────────────────────────────────
+## ShopForge Microservices
+##
+## Network topology:
+##   Internet → api-gateway:8000 (public)
+##                  ↓ routes + forwards X-User-* headers
+##              order-service:8081 (internal)
+##                  ↓ HTTP                    ↓ HTTP
+##          inventory-service:8082      payment-service:8083
+##               (internal)                  (internal)
+##
+## Each service has its OWN MySQL database — no shared schemas.
+## Ports 8081/8082/8083 are on the internal Docker network only.
+## Only port 8000 (gateway) needs to be exposed to the internet.
+## ─────────────────────────────────────────────────────────────────────────────
+#
+#services:
+#
+#  # ── MySQL: Orders DB ────────────────────────────────────────────────────────
+#  mysql-orders:
+#    image: mysql:8.3
+#    container_name: mysql-orders
+#    restart: unless-stopped
+#    environment:
+#      MYSQL_ROOT_PASSWORD: ${DB_PASS:-rootpass}
+#      MYSQL_DATABASE: shopforge_orders
+#    ports:
+#      - "3307:3306"     # exposed on 3307 for local dev access, not used by services
+#    volumes:
+#      - mysql_orders_data:/var/lib/mysql
+#      - ./order-service/src/main/resources/schema.sql:/docker-entrypoint-initdb.d/schema.sql
+#    networks:
+#      - shopforge-net
+#    healthcheck:
+#      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-p${DB_PASS:-rootpass}"]
+#      interval: 10s
+#      timeout: 5s
+#      retries: 10
+#
+#  # ── MySQL: Inventory DB ─────────────────────────────────────────────────────
+#  mysql-inventory:
+#    image: mysql:8.3
+#    container_name: mysql-inventory
+#    restart: unless-stopped
+#    environment:
+#      MYSQL_ROOT_PASSWORD: ${DB_PASS:-rootpass}
+#      MYSQL_DATABASE: shopforge_inventory
+#    ports:
+#      - "3308:3306"
+#    volumes:
+#      - mysql_inventory_data:/var/lib/mysql
+#      - ./inventory-service/src/main/resources/schema.sql:/docker-entrypoint-initdb.d/schema.sql
+#    networks:
+#      - shopforge-net
+#    healthcheck:
+#      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-p${DB_PASS:-rootpass}"]
+#      interval: 10s
+#      timeout: 5s
+#      retries: 10
+#
+#  # ── MySQL: Payments DB ──────────────────────────────────────────────────────
+#  mysql-payments:
+#    image: mysql:8.3
+#    container_name: mysql-payments
+#    restart: unless-stopped
+#    environment:
+#      MYSQL_ROOT_PASSWORD: ${DB_PASS:-rootpass}
+#      MYSQL_DATABASE: shopforge_payments
+#    ports:
+#      - "3309:3306"
+#    volumes:
+#      - mysql_payments_data:/var/lib/mysql
+#      - ./payment-service/src/main/resources/schema.sql:/docker-entrypoint-initdb.d/schema.sql
+#    networks:
+#      - shopforge-net
+#    healthcheck:
+#      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-p${DB_PASS:-rootpass}"]
+#      interval: 10s
+#      timeout: 5s
+#      retries: 10
+#
+#  # ── API Gateway — the only public-facing service ────────────────────────────
+#  api-gateway:
+#    build:
+#      context: ./api-gateway
+#      dockerfile: Dockerfile
+#    container_name: api-gateway
+#    restart: unless-stopped
+#    ports:
+#      - "8000:8000"     # ← only this port exposed to the internet
+#    environment:
+#      JWT_SECRET: ${JWT_SECRET}
+#    networks:
+#      - shopforge-net
+#    depends_on:
+#      - order-service
+#
+#  # ── Order Service — saga orchestrator ───────────────────────────────────────
+#  order-service:
+#    build:
+#      context: ./order-service
+#      dockerfile: Dockerfile
+#    container_name: order-service
+#    restart: unless-stopped
+#    # NOT exposed externally — internal network only
+#    expose:
+#      - "8081"
+#    environment:
+#      DB_HOST: mysql-orders
+#      DB_USER: root
+#      DB_PASS: ${DB_PASS:-rootpass}
+#      INVENTORY_SERVICE_URL: http://inventory-service:8082
+#      PAYMENT_SERVICE_URL: http://payment-service:8083
+#      JWT_SECRET: ${JWT_SECRET}
+#    networks:
+#      - shopforge-net
+#    depends_on:
+#      mysql-orders:
+#        condition: service_healthy
+#      inventory-service:
+#        condition: service_started
+#      payment-service:
+#        condition: service_started
+#
+#  # ── Inventory Service ────────────────────────────────────────────────────────
+#  inventory-service:
+#    build:
+#      context: ./inventory-service
+#      dockerfile: Dockerfile
+#    container_name: inventory-service
+#    restart: unless-stopped
+#    expose:
+#      - "8082"          # internal only — called by order-service, not the gateway
+#    environment:
+#      DB_HOST: mysql-inventory
+#      DB_USER: root
+#      DB_PASS: ${DB_PASS:-rootpass}
+#    networks:
+#      - shopforge-net
+#    depends_on:
+#      mysql-inventory:
+#        condition: service_healthy
+#
+#  # ── Payment Service ──────────────────────────────────────────────────────────
+#  payment-service:
+#    build:
+#      context: ./payment-service
+#      dockerfile: Dockerfile
+#    container_name: payment-service
+#    restart: unless-stopped
+#    expose:
+#      - "8083"          # internal only — called by order-service, not the gateway
+#    environment:
+#      DB_HOST: mysql-payments
+#      DB_USER: root
+#      DB_PASS: ${DB_PASS:-rootpass}
+#      STRIPE_API_KEY: ${STRIPE_API_KEY}
+#      STRIPE_WEBHOOK_SECRET: ${STRIPE_WEBHOOK_SECRET}
+#    networks:
+#      - shopforge-net
+#    depends_on:
+#      mysql-payments:
+#        condition: service_healthy
+#
+#networks:
+#  shopforge-net:
+#    driver: bridge
+#
+#volumes:
+#  mysql_orders_data:
+#  mysql_inventory_data:
+#  mysql_payments_data:

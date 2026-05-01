@@ -1,0 +1,41 @@
+server:
+  port: 8084
+
+spring:
+  application:
+    name: ORDER-SERVICE
+
+  datasource:
+    url: jdbc:oracle:thin:@localhost:1521:xe      # jdbc:mysql://localhost:3306/ECOMMERCE_ORDER
+    username: ${DB_USER:C##ECOMMERCE_ORDER}
+    password: ${DB_PASS:order4349}
+    driver-class-name: oracle.jdbc.OracleDriver   # com.mysql.cj.jdbc.Driver
+
+  jpa:
+    show-sql: true
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.OracleDialect    # org.hibernate.dialect.MySQLDialect
+
+# Other service URLs
+services:
+  inventory:
+    url: ${INVENTORY_SERVICE_URL:http://localhost:8083}
+
+  payment:
+    url: ${PAYMENT_SERVICE_URL:http://localhost:8085}
+
+  connect-timeout-ms: 5000
+  read-timeout-ms: 10000
+
+# JWT secret shared across all services (inject via env var in production)
+jwt:
+  secret: ${JWT_SECRET:shopforge-local-dev-secret-change-in-prod}
+
+logging:
+  level:
+    com:
+      fabulous:
+        order: DEBUG

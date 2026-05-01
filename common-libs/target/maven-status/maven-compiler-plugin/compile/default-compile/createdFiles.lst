@@ -1,0 +1,7 @@
+com\fabulous\events\OrderCreatedEvent.class
+com\fabulous\events\PaymentCompletedEvent.class
+com\fabulous\request\BookingRequest.class
+com\fabulous\response\BookingResponse.class
+com\fabulous\events\OrderItemEvent.class
+com\fabulous\common\KafkaConfigProperties.class
+com\fabulous\events\InventoryReservedEvent.class

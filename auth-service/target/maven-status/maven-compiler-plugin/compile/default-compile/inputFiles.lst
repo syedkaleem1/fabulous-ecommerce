@@ -1,0 +1,13 @@
+D:\SPRING-BOOT PROJECTS\Microservices_Projects\Fabulous-ecom\auth-service\src\main\java\com\fabulous\auth\config\SecurityConfig.java
+D:\SPRING-BOOT PROJECTS\Microservices_Projects\Fabulous-ecom\auth-service\src\main\java\com\fabulous\auth\model\User.java
+D:\SPRING-BOOT PROJECTS\Microservices_Projects\Fabulous-ecom\auth-service\src\main\java\com\fabulous\auth\service\AuthService.java
+D:\SPRING-BOOT PROJECTS\Microservices_Projects\Fabulous-ecom\auth-service\src\main\java\com\fabulous\auth\controller\AuthController.java
+D:\SPRING-BOOT PROJECTS\Microservices_Projects\Fabulous-ecom\auth-service\src\main\java\com\fabulous\auth\service\JwtService.java
+D:\SPRING-BOOT PROJECTS\Microservices_Projects\Fabulous-ecom\auth-service\src\main\java\com\fabulous\auth\dto\RegisterRequest.java
+D:\SPRING-BOOT PROJECTS\Microservices_Projects\Fabulous-ecom\auth-service\src\main\java\com\fabulous\auth\AuthServiceApplication.java
+D:\SPRING-BOOT PROJECTS\Microservices_Projects\Fabulous-ecom\auth-service\src\main\java\com\fabulous\auth\exception\GlobalExceptionHandler.java
+D:\SPRING-BOOT PROJECTS\Microservices_Projects\Fabulous-ecom\auth-service\src\main\java\com\fabulous\auth\repository\UserRepository.java
+D:\SPRING-BOOT PROJECTS\Microservices_Projects\Fabulous-ecom\auth-service\src\main\java\com\fabulous\auth\dto\AuthResponse.java
+D:\SPRING-BOOT PROJECTS\Microservices_Projects\Fabulous-ecom\auth-service\src\main\java\com\fabulous\auth\exception\InvalidEmailORPasswordException.java
+D:\SPRING-BOOT PROJECTS\Microservices_Projects\Fabulous-ecom\auth-service\src\main\java\com\fabulous\auth\model\Role.java
+D:\SPRING-BOOT PROJECTS\Microservices_Projects\Fabulous-ecom\auth-service\src\main\java\com\fabulous\auth\dto\LoginRequest.java

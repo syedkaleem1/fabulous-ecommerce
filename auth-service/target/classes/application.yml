@@ -1,0 +1,43 @@
+server:
+  port: 8084
+
+spring:
+  application:
+    name: AUTH-SERVICE
+
+  datasource:
+    url: jdbc:mysql://localhost:3306/FABULOUS_ECOMMERCE
+    username: root               # ${DB_USER: root}
+    password: Fabulous1234       #${DB_PASS: Fabulous1234}
+    driver-class-name: com.mysql.cj.jdbc.Driver
+
+  jpa:
+    show-sql: true
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQLDialect
+
+jwt:
+ secret: XtAL7rMPd83t6Vq2t/VYwtX3MXLBeqXmhUP3qUzAg0M=       #fabulous-local-dev-secret-change-in-prod
+ expiry-ms: 86400000
+
+# Other service URLs
+cart:
+  service:
+    url: http://localhost:8082
+
+inventory:
+  service:
+    url: http://localhost:8083
+
+payment:
+  service:
+    url: http://localhost:8085
+
+logging:
+  level:
+    com:
+      fabulous:
+        auth: DEBUG

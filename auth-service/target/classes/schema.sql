@@ -1,0 +1,15 @@
+CREATE DATABASE IF NOT EXISTS FABULOUS_ECOMMERCE;
+USE FABULOUS_ECOMMERCE;
+
+CREATE TABLE IF NOT EXISTS users (
+    id            BIGINT AUTO_INCREMENT PRIMARY KEY,
+    first_name    VARCHAR(100) NOT NULL,
+    last_name     VARCHAR(100) NOT NULL,
+    email         VARCHAR(255) NOT NULL UNIQUE,
+    mobile_number VARCHAR(255) NOT NULL UNIQUE,
+    password_hash VARCHAR(255) NOT NULL,
+    role          VARCHAR(20)  NOT NULL DEFAULT 'CUSTOMER',
+    enabled       BOOLEAN      NOT NULL DEFAULT TRUE,
+    created_at    DATETIME(6),
+    INDEX idx_email (email)
+);

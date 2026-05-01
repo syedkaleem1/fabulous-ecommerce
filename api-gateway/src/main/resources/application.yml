@@ -1,0 +1,54 @@
+server:
+  port: 8000
+
+spring:
+  application:
+    name: api-gateway
+
+  cloud:
+    gateway:
+      # Global CORS
+      globalcors:
+        corsConfigurations:
+          '[/**]':
+            allowedOrigins: "http://localhost:3000"
+            allowedMethods: ["GET","POST","PUT","DELETE","PATCH","OPTIONS"]
+            allowedHeaders: ["*"]
+            allowCredentials: true
+
+      routes:
+        # ── Order Service ──────────────────────────────────────────────────
+        - id: order-service
+          uri: http://order-service:8081
+          predicates:
+            - Path=/api/orders/**
+#          filters:
+#            - name: JwtAuthFilter   # validates JWT before forwarding
+#            - StripPrefix=0
+
+        # ── Inventory Service (internal only — not exposed to clients) ─────
+        - id: inventory-service
+          uri: http://inventory-service:8082
+          predicates:
+            - Path=/api/inventory/**
+#          filters:
+#            - name: JwtAuthFilter
+#            - StripPrefix=0
+
+        # ── Payment Service (internal only) ───────────────────────────────
+        - id: payment-service
+          uri: http://payment-service:8083
+          predicates:
+            - Path=/api/payments/**
+#          filters:
+#            - name: JwtAuthFilter
+#            - StripPrefix=0
+
+# JWT secret shared across all services (inject via env var in production)
+#jwt:
+#  secret: ${JWT_SECRET:shopforge-local-dev-secret-change-in-prod}
+
+#logging:
+#  level:
+#    org.springframework.cloud.gateway: INFO
+#    com.shopforge.gateway: DEBUG

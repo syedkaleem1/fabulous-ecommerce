@@ -1,0 +1,7 @@
+D:\SPRING PROJECTS\E-Commerce\common-libs\src\main\java\com\fabulous\common\KafkaConfigProperties.java
+D:\SPRING PROJECTS\E-Commerce\common-libs\src\main\java\com\fabulous\events\InventoryReservedEvent.java
+D:\SPRING PROJECTS\E-Commerce\common-libs\src\main\java\com\fabulous\events\OrderCreatedEvent.java
+D:\SPRING PROJECTS\E-Commerce\common-libs\src\main\java\com\fabulous\events\OrderItemEvent.java
+D:\SPRING PROJECTS\E-Commerce\common-libs\src\main\java\com\fabulous\events\PaymentCompletedEvent.java
+D:\SPRING PROJECTS\E-Commerce\common-libs\src\main\java\com\fabulous\request\BookingRequest.java
+D:\SPRING PROJECTS\E-Commerce\common-libs\src\main\java\com\fabulous\response\BookingResponse.java

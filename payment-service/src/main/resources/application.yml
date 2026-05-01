@@ -1,0 +1,33 @@
+server:
+  port: 8085
+
+spring:
+  application:
+    name: PAYMENT-SERVICE
+
+  datasource:
+    url: jdbc:oracle:thin:@localhost:1521:xe      # jdbc:mysql://localhost:3306/ECOMMERCE_ORDER
+    username: ${DB_USER:C##ECOMMERCE_PAYMENT}
+    password: ${DB_PASS:order4349}
+    driver-class-name: oracle.jdbc.OracleDriver   # com.mysql.cj.jdbc.Driver
+
+  jpa:
+    show-sql: true
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.OracleDialect    # org.hibernate.dialect.MySQLDialect
+
+# Stripe injected via environment variable, never hardcoded
+stripe:
+  api:
+    key: ${STRIPE_API_KEY:sk_test_REPLACE_ME}
+  webhook:
+    secret: ${STRIPE_WEBHOOK_SECRET:whsec_REPLACE_ME}
+
+logging:
+  level:
+    com:
+      fabulous:
+        payment: DEBUG
