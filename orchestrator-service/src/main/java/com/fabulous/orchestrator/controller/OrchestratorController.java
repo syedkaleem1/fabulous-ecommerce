@@ -1,6 +1,5 @@
 package com.fabulous.orchestrator.controller;
 
-import jakarta.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -15,7 +14,6 @@ import org.springframework.web.bind.annotation.RestController;
 public class OrchestratorController {
 
     private static final Logger logger = LoggerFactory.getLogger(OrchestratorController.class);
-    private final AuthService authService;
 
     public OrchestratorController(AuthService authService) {
         this.authService = authService;
